@@ -1,4 +1,5 @@
 #include<iostream>
+#include<map>
 using namespace std;
 
 class Node{
@@ -85,14 +86,33 @@ void print(Node* tail){
     
 }
 
+bool detectLoop(Node* head){
+
+    if(head==NULL)
+     return false;
+
+    map<Node*,bool> visited; 
+
+    Node* temp=head;
+    while (temp!=NULL)
+    {
+        if(visited[temp]==true)
+         return true;
+
+        visited[temp]==true;
+        temp=temp->next; 
+    }
+    return false;
+}
+
 int main(){
     Node* tail=NULL;
 
     insertNode(tail,5,3);
-    print(tail);
+   // print(tail);
 
     insertNode(tail,3,5);
-    print(tail);
+    //print(tail);
 
     // insertNode(tail,5,7);
     // print(tail);
@@ -112,8 +132,15 @@ int main(){
     //deleteNode(tail,10);
     //print(tail);
 
-    deleteNode(tail,3);
+    //deleteNode(tail,3);
     print(tail);
+    
+    if(detectLoop(head)){
+        cout<<"cycle is present"<<endl;
+    }
+    else{
+        cout<<"cycle is not present"<<endl;
+    }
 
     return 0;
 }

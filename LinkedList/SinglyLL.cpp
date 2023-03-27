@@ -1,4 +1,5 @@
 #include<iostream>
+#include<map>
 using namespace std;
 
 class Node {
@@ -99,6 +100,78 @@ void deleteNode(int pos,Node* &head){
     }
 }
 
+bool detectLoop(Node* head){
+
+    if(head==NULL)
+     return false;
+
+    map<Node*,bool> visited; 
+
+    Node* temp=head;
+    while (temp!=NULL)
+    {
+        if(visited[temp]==true){
+         cout<<"present on element"<<temp->data<<endl;
+         return true;
+        }
+        visited[temp]==true;
+        temp=temp->next; 
+    }
+    return false;
+}
+
+Node* floyddetectLoop(Node* head){
+    if(head==NULL){
+        return NULL;
+    }
+
+    Node* slow=head;
+    Node* fast=head;
+
+    while(slow!=NULL && fast!=NULL){
+        fast=fast->next;
+        if(fast!=NULL){
+            fast=fast->next;
+        }
+        slow=slow->next;
+
+        if(slow==fast){
+         cout<<"present at"<<slow->data<<endl;
+        return slow;
+        }
+    }
+    return NULL;
+}
+
+Node* getStartingNode(Node* head){
+    if(head==NULL){
+        return NULL;
+    }
+
+    Node* intersection=floyddetectLoop(head);
+    Node* slow=head;
+
+    while(slow!=intersection){
+        slow=slow->next;
+        intersection=intersection->next;
+    }
+    return slow;
+}
+
+void removeLoop(Node* head){
+    if(head==NULL){
+        return ;
+    }
+
+    Node* startofLoop=getStartingNode(head);
+    Node* temp=startofLoop;
+
+    while(temp->next!=startofLoop){
+        temp=temp->next;
+    }
+    temp->next=NULL;
+}
+
 int main(){
     //create
     Node* node1=new Node(10);
@@ -108,30 +181,51 @@ int main(){
     //head pointed to node1
     Node* head=node1;
     Node* tail=node1;
-    print(head);
+    //print(head);
     
     //insertAtHead(head,12);
     insertAtTail(tail,12);
-    print(head);
+    //print(head);
 
     //insertAtHead(head,15);
     insertAtTail(tail,15);
-    print(head);
+    //print(head);
 
-    // insertAtPos(head,3,44);
+    //insertAtPos(head,3,44);
     // print(head);
 
-    // insertAtPos(tail,head,1,33);
+    //insertAtPos(tail,head,1,33);
     // print(head);
 
     insertAtPos(tail,head,4,88);
-    print(head);
+    //print(head);
 
+    
     cout<<"head "<<head->data<<endl;
     cout<<"tail "<<tail->data<<endl;
+    tail->next=head->next;
+    //deleteNode(3,head);
+    //print(head);
+    
+    if(floyddetectLoop(head)!=NULL){
+        cout<<"cycle is present"<<endl;
+    }
+    else{
+        cout<<"cycle is not present"<<endl;
+    }
 
-    deleteNode(3,head);
+    Node* loop=getStartingNode(head);
+    cout<<"loop start at"<<loop->data<<endl;
+    
+    removeLoop(head);
     print(head);
+
+    // if(detectLoop(head)){
+    //     cout<<"cycle is present"<<endl;
+    // }
+    // else{
+    //     cout<<"cycle is not present"<<endl;
+    // }
 
     return 0;
 }
